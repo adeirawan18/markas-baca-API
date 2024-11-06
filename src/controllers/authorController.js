@@ -1,6 +1,19 @@
 const Author = require("../models/author");
 const mongoose = require('mongoose');
 
+const multer = require('multer'); 
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');  
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);  
+    }
+});
+
+const upload = multer({ storage: storage });
+
 // Get all authors
 exports.getAuthors = async (req, res) => {
     try {
@@ -14,7 +27,7 @@ exports.getAuthors = async (req, res) => {
 // Get author by ID
 exports.getAuthorById = async (req, res) => {
     try {
-        const author = await Author.findById(req.params.id, {deletedAt: null});
+        const author = await Author.findById(req.params.id );
         if (!author) return res.status(404).json({ message: "Data penulis tidak ditemukan" });
         res.json(author);
     } catch (err) {
@@ -63,3 +76,35 @@ exports.deleteAuthor = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.uploadAuthorProfileImage = [
+    upload.single('profileImage'),  
+    async (req, res) => {
+        try {
+            if (!req.file) {
+                return res.status(400).json({ message: "Profile image is required" });
+            }
+
+            const authorId = req.body.authorId;  
+            const profileImagePath = req.file.path;  
+
+            
+            const author = await Author.findById(authorId);
+            if (!author) {
+                return res.status(404).json({ message: "Author not found" });
+            }
+
+            
+            author.profileImage = profileImagePath;
+            await author.save();
+
+            res.status(200).json({
+                message: "Profile image updated successfully",
+                author: author
+            });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+];
+

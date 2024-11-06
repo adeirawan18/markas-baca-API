@@ -36,7 +36,7 @@ exports.createBook = async (req, res) => {
             title: req.body.title,
             description: req.body.description,
             summary: req.body.summary,
-            authorId: req.body.authorId,
+            author: req.body.authorId,
             category: req.body.categoryId,
         });
         await book.save();
