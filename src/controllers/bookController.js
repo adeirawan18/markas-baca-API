@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 exports.getAllBooks = async (req, res) => {
     try {
         const books = await Book.find()
-            .populate('author')  // Populate author
-            .populate('category');  // Populate category
+            .populate('author')  
+            .populate('category');  
         res.status(200).json(books);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -78,7 +78,7 @@ exports.uploadBookCover = async (req, res) => {
         }
 
         const bookId = req.body.bookId;
-        const coverImagePath = req.file.path; // Path file yang sudah di-upload
+        const coverImagePath = req.file.path; 
 
         // Mencari buku berdasarkan bookId
         const book = await Book.findById(bookId);

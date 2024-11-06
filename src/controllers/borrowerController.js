@@ -31,7 +31,7 @@ exports.createBorrower = async (req, res) => {
 
         const borrower = new Borrower({
             _id: new mongoose.Types.ObjectId(),
-            name: req.body.name, // Menyertakan nama borrower
+            name: req.body.name,
             joinAt: new Date(),
         });
 

@@ -1,4 +1,4 @@
-// routes/index.js
+
 const express = require("express");
 const testRoutes = require("./test_routes");
 const bookRoutes = require("./bookRoutes");
@@ -9,7 +9,7 @@ const borrowRoutes = require("./borrowRoutes");
 
 const routes = express.Router();
 
-// Kumpulkan semua routes di sini
+
 routes.use(testRoutes);
 routes.use(bookRoutes);
 routes.use(authorRoutes);

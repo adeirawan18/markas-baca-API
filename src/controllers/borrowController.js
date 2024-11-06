@@ -14,18 +14,18 @@ exports.getActiveBorrows = async (req, res) => {
 // Menambahkan data peminjaman buku
 exports.borrowBook = async (req, res) => {
     try {
-        const borrowedAt = new Date(); // Tanggal peminjaman buku (sekarang)
+        const borrowedAt = new Date();
         
         // Menghitung tanggal 1 bulan setelah peminjaman
         const expectedReturnedAt = new Date(borrowedAt);
-        expectedReturnedAt.setMonth(borrowedAt.getMonth() + 1); // Menambahkan 1 bulan
+        expectedReturnedAt.setMonth(borrowedAt.getMonth() + 1); 
         
         const borrow = new Borrow({
             _id: new mongoose.Types.ObjectId(),
             bookId: req.body.bookId,
             borrowerId: req.body.borrowerId,
             borrowedAt: borrowedAt,
-            expectedReturnedAt: expectedReturnedAt // Set tanggal pengembalian yang diharapkan
+            expectedReturnedAt: expectedReturnedAt 
         });
         
         await borrow.save();
@@ -37,14 +37,14 @@ exports.borrowBook = async (req, res) => {
 
 const calculateFine = (expectedReturnedAt, returnedAt) => {
     const oneDay = 24 * 60 * 60 * 1000; 
-    const diffTime = new Date(returnedAt) - new Date(expectedReturnedAt); // Selisih waktu antara pengembalian dan tenggat waktu
-    const daysLate = Math.floor(diffTime / oneDay); // Menghitung jumlah hari keterlambatan
+    const diffTime = new Date(returnedAt) - new Date(expectedReturnedAt); 
+    const daysLate = Math.floor(diffTime / oneDay); 
 
     if (daysLate > 0) {
-        const finePerDay = 5000; // Denda per hari
-        return daysLate * finePerDay; // Total denda
+        const finePerDay = 5000; 
+        return daysLate * finePerDay;
     }
-    return 0; // Tidak ada denda jika tidak terlambat
+    return 0; 
 }
 
 // Menambahkan data pengembalian buku
@@ -59,7 +59,7 @@ exports.returnBook = async (req, res) => {
         
         // Update status pengembalian dan denda
         borrow.returnedAt = new Date();
-        borrow.fine = fine; // Menyimpan denda pada data peminjaman
+        borrow.fine = fine; 
         
         // Simpan data peminjaman yang sudah diperbarui
         await borrow.save();
