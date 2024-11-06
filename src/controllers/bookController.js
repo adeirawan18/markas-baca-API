@@ -1,9 +1,13 @@
 const Book = require('../models/book');
+const Borrow = require('../models/borrow');
 const mongoose = require('mongoose');
 
 // Mendapatkan semua buku
 exports.getAllBooks = async (req, res) => {
     try {
+        const borrowedBooks = await Borrow.find({ returnedAt: null }).select('bookId');
+
+        const borrowedBookIds = borrowedBooks.map(borrow => borrow.bookId.toString());
         const books = await Book.find()
             .populate('author')  
             .populate('category');  
